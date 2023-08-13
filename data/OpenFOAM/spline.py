@@ -118,7 +118,8 @@ if __name__=="__main__":
 
     # def the new points of each database
     coords= np.zeros((101, 2))
-    coords[0]=[b1x[0],b1y[0]]
+    coords[0][0] = b1x[0]
+    coords[0][1] = b1y[0]
                    
 
 # plot the new point of topper surface of airfoil
@@ -297,7 +298,8 @@ if __name__=="__main__":
                     break
         plt.plot(x01[j], y21[j], 'y-o')
         coords[j+70] = [round(x01[j], 5), round(y21[j][0], 5)]
-        coords[-1]=[b1x[-1],b1y[-1]]
+        coords[-1][0] = b1x[-1]
+        coords[-1][1] = b1y[-1]
     np.save(file, coords)
 
 
