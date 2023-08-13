@@ -13,7 +13,7 @@ import utils
 import multiprocessing as mp
 
 samples   = 8           # no. of datasets to produce
-cpu_to_use = 3
+cpu_to_use = 4
 freestream_angle  = math.pi / 18.  # -angle ... angle
 freestream_length = 10.           # len * (1. ... factor)
 # freestream_length_factor = 6.    # length factor
@@ -298,6 +298,8 @@ utils.makeDirs( ["./data_pictures", "./train", "./OpenFOAM/constant/polyMesh/set
     
 
 def full_process(airfoil, fsX, fsY, n):
+
+    startime_case = time.time()
     id = os.getpid()
     if not os.path.exists(f'{id}'):
         os.system(f'cp -r OpenFOAM {id}')
@@ -350,7 +352,14 @@ def full_process(airfoil, fsX, fsY, n):
     os.chdir('..')
     n = int(n)
     outputProcessing(basename, stepfilename, fsX, fsY, id)
-    print("%s : " %(time.strftime('%X')) + f'case-{id}  is done.')
+
+    
+    totaltime_case = time.time() - startime_case
+
+    with open('log', 'a+') as infile:
+        infile.write(f'(cpu {cpu_to_use} / samples {samples}) - {stepfilename} : {(totaltime_case/60):.2f} min\n')
+
+    print("%s : " %(time.strftime('%X')) + f'case-{id}  is done. using time : {(totaltime_case/60):.2f} min')
     if os.system(f'rm -r {id}') !=0:
         print(f'can not remove case {id} ')
         os.chdir('..')
@@ -359,13 +368,11 @@ def full_process(airfoil, fsX, fsY, n):
     return 0
 
 
-samplelst = [1]
+samplelst = []
 def progress(status):
-    if status != 0:
-        samplelst.append(-1)
-    else:
+    if status == 0:
         samplelst.append(status)
-    print(f'current sample is : {len(samplelst) - 1} / {samples}')
+    print(f'current sample is : {len(samplelst)} / {samples}')
 
 if __name__=='__main__':
     pool = mp.Pool(cpu_to_use)
@@ -396,4 +403,5 @@ if __name__=='__main__':
     pool.join()
     totalTime = (time.time() - startTime)/60
     print(f'Final time elapsed: {totalTime:.2f} minutes')
-    print(f'cursamples : {samplelst}')
+    with open('log', 'a+') as infile:
+        infile.write(f'(total  running samples : {len(samplelst)}) / cpu core : {cpu_to_use}) total time : {(totalTime/60):.2f} min\n')
