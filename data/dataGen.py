@@ -12,7 +12,7 @@ import pandas as pd
 import utils 
 import multiprocessing as mp
 
-samples   = 8           # no. of datasets to produce
+samples   = 16           # no. of datasets to produce
 cpu_to_use = 4
 freestream_angle  = math.pi / 18.  # -angle ... angle
 freestream_length = 10.           # len * (1. ... factor)
@@ -23,8 +23,8 @@ freestream_length_factor = 5
 cpu_total = mp.cpu_count()
 print(f'Using cpu core : {cpu_to_use} / {cpu_total}')
 
-airfoil_database  = "./airfoil_database/"
-output_dir        = "./train/"
+airfoil_database  = "./airfoil_database_test/"
+output_dir        = "./test/"
 
 seed = random.randint(0, 2**32 - 1)
 np.random.seed(seed)
