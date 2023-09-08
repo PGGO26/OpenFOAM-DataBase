@@ -2,32 +2,31 @@ import os
 import numpy as np
 from keras.models import load_model
 
-def load_data(data_dir = 'data/test/'):
-    input = []
+def load_data(data_dir = 'data/train/'):
+    points = []
+    freestreamV = []
     target = []
     for file in os.listdir(data_dir):
         data = np.load(data_dir + file)
-        input.append(np.array(data['output'][:3]))
-        target.append(np.array(data['LnD']).reshape(1,2))
-    img_input = np.moveaxis(input, 1, 3)
-    return normalizeation(np.asarray(img_input)), normalizeation(np.asarray(target))
+        points.append(data['input'][0][:-2].reshape(101))
+        freestreamV.append(data['input'][0][-2:].reshape(2))
+        target.append(np.array(data['LnD'] * 100).reshape(2))
+    return np.asarray(points), np.asarray(freestreamV), np.asarray(target)
 
-def normalizeation(I):
+def normalization(I):
     I = ((I - I.min()) / (I.max() - I.min()))
     return I
 
-input_test, target_test = load_data()
+point, freestreamVelocity, target = load_data('data/test/')
+print(point.shape, freestreamVelocity.shape)
 
-model = load_model('cnn_model.keras')
+model = load_model('dnn_model.keras')
+results = model.evaluate([point, freestreamVelocity], target, batch_size=16)
+print("test results (mse):", results)
 
-results = model.evaluate(input_test, target_test, batch_size=3)
-print("test loss, test acc:", results)
-
-print("Generate predictions for 3 samples")
-predictions = model.predict(input_test[:3])
-print(f"predictions shape: {predictions.shape} predictions : {predictions}")
-# predictions = model.predict(input_test)
-# np.mean(np.abs((target_test - predictions))) #mae
-# print(predictions)
-# mape = np.mean(np.abs((target_test - predictions) / target_test)) * 100 #mape
-# print('mape : ', mape)
+predictions = model.predict([point, freestreamVelocity])
+mape = np.mean(np.abs((target - predictions) / target)) #mape
+print(f'mape : {(mape * 100):.2f} %')
+for item in range(len(predictions)):
+    mape_each = np.abs((target[item] - predictions[item]) / target[item]) * 100
+    print(f'predicitons : {predictions[item] / 100}, test : {target[item] / 100}, mape(%) : {mape_each}')

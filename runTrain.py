@@ -1,52 +1,59 @@
-
 import os
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
-from keras.optimizers import SGD
+from keras import Input, Model, losses, metrics, layers
+from keras.optimizers import Adam, SGD
+from matplotlib import pyplot as plt
 
-def load_data(data_dir = 'data/train/'):
-    input = []
-    target = []
-    for file in os.listdir(data_dir):
-        data = np.load(data_dir + file)
-        input.append(np.array(data['output'][:3]))
-        target.append(np.array(data['LnD']).reshape(1,2))
-    img_input = np.moveaxis(input, 1, 3)
-    return normalizeation(np.asarray(img_input)), normalizeation(np.asarray(target))
-
-def normalizeation(I):
+def normalization(I):
     I = ((I - I.min()) / (I.max() - I.min()))
     return I
 
+def load_data(data_dir = 'data/train/'):
+    points = []
+    freestreamV = []
+    target = []
+    for file in os.listdir(data_dir):
+        data = np.load(data_dir + file)
+        points.append(data['input'][0][:-2].reshape(101))
+        freestreamV.append(data['input'][0][-2:].reshape(2))
+        # input.append(data['input'][0].reshape(103))
+        target.append(np.array(data['LnD'] * 100).reshape(2))
+    return np.asarray(points), np.asarray(freestreamV), np.asarray(target)
 
-input, target = load_data() # argument 為訓練輸入的 data 資料夾，預設為 data/train/
-print(f'input shape is : {input.shape}  target shape is : {target.shape}')
+point, freestreamVelocity, target = load_data()
+print(f'points shape : {point.shape}, velocity shape : {freestreamVelocity.shape}, target shape : {target.shape}')
 
-input_shape = (256, 256, 3)
-model = Sequential([
-    Conv2D(64, 3, input_shape=input_shape, padding='same',
-           activation='relu', strides=1),
-    MaxPooling2D(pool_size=(2, 2), strides=1),
-#     Dropout(0.2),
-    # Conv2D(128, 3, input_shape=input_shape, padding='same', activation='relu', strides=1),
-    # MaxPooling2D(pool_size=(2, 2), strides=1),
-#     Dropout(0.2),
-    Flatten(),
-#     Dropout(0.5),
-    # Dense(128, activation='relu'),
-    Dense(128, activation='relu'),
-    Dense(64, activation='relu'),
-    Dense(2, activation='relu')
-])
+input_points = Input(shape=(101,), name='points')
+input_velocity = Input(shape=(2,), name='velocity')
 
-model.compile(optimizer = SGD(learning_rate=0.01),loss = 'mse',metrics=['mse', 'mape'])
-cnn = model.fit(input, target, 
+x1 = layers.Dense(64)(input_points)
+x2 = layers.Dense(2)(input_velocity)
+
+x = layers.concatenate([x1, x2])
+x = layers.Dense(4, activation='relu')(x)
+x = layers.Dense(8, activation='relu')(x)
+x = layers.Dense(16, activation='relu')(x)
+x = layers.Dense(32, activation='relu')(x)
+x = layers.Dense(16, activation='relu')(x)
+x = layers.Dense(8, activation='relu')(x)
+x = layers.Dense(4, activation='relu')(x)
+coef_output = layers.Dense(2)(x)
+
+model = Model(inputs=[input_points, input_velocity], outputs=coef_output)
+
+model.compile(
+    optimizer = SGD(learning_rate=0.00000001),
+    loss=losses.MeanAbsoluteError(),
+    metrics=[metrics.MeanAbsoluteError()],
+    )
+dnn_model = model.fit([point, freestreamVelocity], target, 
                     #validation_data=(test_images, test_labels),
                     #verbose=2,callbacks=[earlyStop],
-                    batch_size=3, epochs=2)
+                    batch_size=16, epochs=100)
 
-model.save('cnn_model.keras')
-
+model.save('dnn_model.keras')
+plt.plot(dnn_model.history['loss'])
+plt.title('loss figure')
+plt.xlabel('epochs')
+plt.ylabel('MAE %')
+plt.savefig('loss figure.png')
