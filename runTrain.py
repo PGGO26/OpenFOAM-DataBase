@@ -9,51 +9,63 @@ def normalization(I):
     return I
 
 def load_data(data_dir = 'data/train/'):
-    points = []
-    freestreamV = []
+    input = []
     target = []
     for file in os.listdir(data_dir):
         data = np.load(data_dir + file)
-        points.append(data['input'][0][:-2].reshape(101))
-        freestreamV.append(data['input'][0][-2:].reshape(2))
-        # input.append(data['input'][0].reshape(103))
-        target.append(np.array(data['LnD'] * 100).reshape(2))
-    return np.asarray(points), np.asarray(freestreamV), np.asarray(target)
+        input.append(data['input'][0].reshape(103))
+        target.append(data['cf'][0].reshape(101))
+    return np.asarray(input), np.asarray(target)
 
-point, freestreamVelocity, target = load_data()
-print(f'points shape : {point.shape}, velocity shape : {freestreamVelocity.shape}, target shape : {target.shape}')
+train_input, train_target = load_data('train/')
+print(f'input shape : {train_input.shape}, target shape : {train_target.shape}')
 
-input_points = Input(shape=(101,), name='points')
-input_velocity = Input(shape=(2,), name='velocity')
+input_PnV = Input(shape=(103,), name='Points and Velocity')
 
-x1 = layers.Dense(64)(input_points)
-x2 = layers.Dense(2)(input_velocity)
+x = layers.Dense(128)(input_PnV)
+x = layers.Dense(128, activation='relu')(x)
+x = layers.Dense(256, activation='relu')(x)
+x = layers.Dense(512, activation='relu')(x)
+x = layers.Dense(256, activation='relu')(x)
+x = layers.Dense(128, activation='relu')(x)
+cf_output = layers.Dense(101)(x)
 
-x = layers.concatenate([x1, x2])
-x = layers.Dense(4, activation='relu')(x)
-x = layers.Dense(8, activation='relu')(x)
-x = layers.Dense(16, activation='relu')(x)
-x = layers.Dense(32, activation='relu')(x)
-x = layers.Dense(16, activation='relu')(x)
-x = layers.Dense(8, activation='relu')(x)
-x = layers.Dense(4, activation='relu')(x)
-coef_output = layers.Dense(2)(x)
-
-model = Model(inputs=[input_points, input_velocity], outputs=coef_output)
+model = Model(inputs=input_PnV, outputs=cf_output)
 
 model.compile(
-    optimizer = SGD(learning_rate=0.00000001),
+    optimizer = SGD(learning_rate=0.0005),
     loss=losses.MeanAbsoluteError(),
-    metrics=[metrics.MeanAbsoluteError()],
+    metrics=['accuracy'],
     )
-dnn_model = model.fit([point, freestreamVelocity], target, 
-                    #validation_data=(test_images, test_labels),
-                    #verbose=2,callbacks=[earlyStop],
-                    batch_size=16, epochs=100)
+
+model.summary()
+dnn_model = model.fit(train_input, train_target,
+                      validation_split=0.2, batch_size=16, epochs=800)
 
 model.save('dnn_model.keras')
-plt.plot(dnn_model.history['loss'])
-plt.title('loss figure')
+
+# # */*/*/*/
+# acc = dnn_model.history['accuracy']
+# val_acc = dnn_model.history['val_accuracy']
+# epochs = range(1, len(acc) + 1)
+
+# plt.plot(epochs, acc, 'bo', label='Training accuracy')
+# plt.plot(epochs, val_acc, 'r-', label='Validation accuracy')
+# plt.title('Traininig And Validation')
+# plt.xlabel('epochs')
+# plt.ylabel('Accuracy')
+# plt.legend()
+# plt.savefig('Training and Validation.png')
+# # */*/*/*/d
+
+loss = dnn_model.history['loss']
+val_loss = dnn_model.history['val_loss']
+epochs = range(1, len(loss) + 1)
+
+plt.plot(epochs[200:], loss[200:], 'b-', label='Training loss')
+plt.plot(epochs[200:], val_loss[200:], 'r-', label='Validation loss')
+plt.title('Training and Validation loss')
 plt.xlabel('epochs')
-plt.ylabel('MAE %')
-plt.savefig('loss figure.png')
+plt.ylabel('loss')
+plt.legend()
+plt.savefig('Training and Validation loss')

@@ -1,32 +1,49 @@
 import os
 import numpy as np
+from matplotlib import pyplot as plt
 from keras.models import load_model
 
 def load_data(data_dir = 'data/train/'):
-    points = []
-    freestreamV = []
+    input = []
     target = []
     for file in os.listdir(data_dir):
         data = np.load(data_dir + file)
-        points.append(data['input'][0][:-2].reshape(101))
-        freestreamV.append(data['input'][0][-2:].reshape(2))
-        target.append(np.array(data['LnD'] * 100).reshape(2))
-    return np.asarray(points), np.asarray(freestreamV), np.asarray(target)
+        input.append(data['input'][0].reshape(103))
+        target.append(data['cf'][0].reshape(101))
+    return np.asarray(input), np.asarray(target)
 
 def normalization(I):
     I = ((I - I.min()) / (I.max() - I.min()))
     return I
 
-point, freestreamVelocity, target = load_data('data/test/')
-print(point.shape, freestreamVelocity.shape)
+# Test
+test_input, test_target = load_data('test/naca001264.dat/v50/')
+print(f'input shape : {test_input.shape}, target shape : {test_target.shape}')
 
 model = load_model('dnn_model.keras')
-results = model.evaluate([point, freestreamVelocity], target, batch_size=16)
+results = model.evaluate(test_input, test_target, batch_size=16)
 print("test results (mse):", results)
 
-predictions = model.predict([point, freestreamVelocity])
-mape = np.mean(np.abs((target - predictions) / target)) #mape
-print(f'mape : {(mape * 100):.2f} %')
-for item in range(len(predictions)):
-    mape_each = np.abs((target[item] - predictions[item]) / target[item]) * 100
-    print(f'predicitons : {predictions[item] / 100}, test : {target[item] / 100}, mape(%) : {mape_each}')
+predictions = model.predict(test_input)
+print(f'predictions shape : {predictions.shape}')
+
+# Plot for different between test dataset and predictions
+plotting_index = 0
+data_dir = 'test/naca001264.dat/v50/'
+
+plotting_predictions = predictions[plotting_index]
+datalst = os.listdir(data_dir)
+plotting_data = np.load(data_dir + datalst[plotting_index])
+cf = plotting_data['cf'][0].reshape(101)
+print(f"cf shape is : {cf.shape}")
+x = np.moveaxis(np.load('temp/data0.npy'), 0, 1)[0]
+y = np.zeros(101)
+for i in range(101):
+    y[i] = plotting_data['input'][0][i]
+cf_diff = cf - plotting_predictions
+
+plt.scatter(x,y, c=cf_diff)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.colorbar()
+plt.savefig('Cf Plotting for test dataset')
