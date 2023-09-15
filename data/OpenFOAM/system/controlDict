@@ -48,27 +48,27 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc boundaryProbes
-    #includeFunc newCloud
+    // #includeFunc boundaryProbes
+    // #includeFunc newCloud
     #includeFunc wallShearStress
 
-    forceCoeffs_airfoil
-	{
-        type        forceCoeffs;
-        libs        ("libforces.so");
+    // forceCoeffs_airfoil
+	// {
+    //     type        forceCoeffs;
+    //     libs        ("libforces.so");
 
-        log         yes;
-        patches     (aerofoil);
-        liftDir     (0 1 0);
-        dragDir     (1 0 0);
-        pitchAxis   (0 0 1);
-	    CofR	(0 0 0);
-	    rho	rhoInf;
-	    rhoInf	1;
-        magUInf     85.75;
-        lRef        1;
-        Aref        1;
-	}
+    //     log         yes;
+    //     patches     (aerofoil);
+    //     liftDir     (0 1 0);
+    //     dragDir     (1 0 0);
+    //     pitchAxis   (0 0 1);
+	//     CofR	(0 0 0);
+	//     rho	rhoInf;
+	//     rhoInf	1;
+    //     magUInf     85.75;
+    //     lRef        1;
+    //     Aref        1;
+	// }
 }
 
 // ************************************************************************* //
