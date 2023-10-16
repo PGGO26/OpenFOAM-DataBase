@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from keras.models import load_model
 
@@ -17,7 +18,8 @@ def normalization(I):
     return I
 
 # Test
-test_input, test_target = load_data('test/naca001264.dat/v50/')
+test_dir = 'test/ah94156.dat/v40/'
+test_input, test_target = load_data(test_dir)
 print(f'input shape : {test_input.shape}, target shape : {test_target.shape}')
 
 model = load_model('dnn_model.keras')
@@ -26,24 +28,4 @@ print("test results (mse):", results)
 
 predictions = model.predict(test_input)
 print(f'predictions shape : {predictions.shape}')
-
-# Plot for different between test dataset and predictions
-plotting_index = 0
-data_dir = 'test/naca001264.dat/v50/'
-
-plotting_predictions = predictions[plotting_index]
-datalst = os.listdir(data_dir)
-plotting_data = np.load(data_dir + datalst[plotting_index])
-cf = plotting_data['cf'][0].reshape(101)
-print(f"cf shape is : {cf.shape}")
-x = np.moveaxis(np.load('temp/data0.npy'), 0, 1)[0]
-y = np.zeros(101)
-for i in range(101):
-    y[i] = plotting_data['input'][0][i]
-cf_diff = cf - plotting_predictions
-
-plt.scatter(x,y, c=cf_diff)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.colorbar()
-plt.savefig('Cf Plotting for test dataset')
+np.save('temp/predictions', predictions)
