@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out values of fields interpolated to a specified cloud of points.
+
+\*---------------------------------------------------------------------------*/
+
+
+type            wallShearStress;
+libs            ("libfieldFunctionObjects.so");
+patches         (aerofoil);
+log             yes;
+executeControl  timeStep;
+writeControl    timeStep;
+writeInterval   100;
+stopAt          endTime;
+// #includeEtc "caseDicts/postProcessing/probes/boundaryCloud.cfg"
+    
+
+// ************************************************************************* //

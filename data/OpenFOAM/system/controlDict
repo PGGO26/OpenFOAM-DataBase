@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         4000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #includeFunc wallShearStress
+}   
+
+
+// wallShearStress
+// {
+//     // Mandatory entries (unmodifiable)
+//     type            wallShearStress;
+//     libs            (fieldFunctionObjects);
+
+//     // Optional entries (runtime modifiable)
+//     patches         (aerofoil); // (wall1 "(wall2|wall3)");
+
+//     // Optional (inherited) entries
+//     writePrecision  8;
+//     writeToFile     true;
+//     useUserTime     true;
+//     region          region0;
+//     enabled         true;
+//     log             true;
+//     timeStart       0;
+//     timeEnd         1000;
+//     executeControl  timeStep;
+//     executeInterval 1;
+//     writeControl    timeStep;
+//     writeInterval   1;
+// }
+
+// yPlus1
+// {
+//     // Mandatory entries (unmodifiable)
+//     type            yPlus;
+//     libs            (fieldFunctionObjects);
+
+//     // Optional (inherited) entries
+//     writePrecision  8;
+//     writeToFile     true;
+//     useUserTime     true;
+//     region          region0;
+//     enabled         true;
+//     log             true;
+//     timeStart       0;
+//     timeEnd         1000;
+//     executeControl  timeStep;
+//     executeInterval 1;
+//     writeControl    timeStep;
+//     writeInterval   1;
+// }
