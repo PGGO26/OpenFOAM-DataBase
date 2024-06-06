@@ -1,0 +1,173 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2206                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _8993af73-20221106 OPENFOAM=2206 patch=221104 version=2206
+Arch   : "LSB;label=32;scalar=64"
+Exec   : decomposePar
+Date   : Jun 06 2024
+Time   : 18:24:15
+Host   : wrx80e
+PID    : 97856
+I/O    : uncollated
+Case   : /home/kevin/Code/SYTang/DataBase/data/OpenFOAM
+nProcs : 1
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+Decomposing mesh
+
+Create mesh
+
+Calculating distribution of cells
+Decomposition method scotch [8] (region region0)
+
+Finished decomposition in 2.13 s
+
+Calculating original mesh data
+
+Distributing cells to processors
+
+Distributing faces to processors
+
+Distributing points to processors
+
+Constructing processor meshes
+
+Processor 0
+    Number of cells = 121954
+    Number of points = 286510
+    Number of faces shared with processor 1 = 3503
+    Number of faces shared with processor 2 = 2246
+    Number of faces shared with processor 3 = 1340
+    Number of faces shared with processor 4 = 4287
+    Number of processor patches = 4
+    Number of processor faces = 11376
+    Number of boundary faces = 8585
+
+Processor 1
+    Number of cells = 120838
+    Number of points = 301143
+    Number of faces shared with processor 0 = 3503
+    Number of faces shared with processor 2 = 737
+    Number of faces shared with processor 3 = 457
+    Number of faces shared with processor 4 = 781
+    Number of faces shared with processor 5 = 3383
+    Number of processor patches = 5
+    Number of processor faces = 8861
+    Number of boundary faces = 9808
+
+Processor 2
+    Number of cells = 122436
+    Number of points = 166856
+    Number of faces shared with processor 0 = 2246
+    Number of faces shared with processor 1 = 737
+    Number of faces shared with processor 3 = 3682
+    Number of faces shared with processor 4 = 1361
+    Number of faces shared with processor 5 = 556
+    Number of faces shared with processor 6 = 166
+    Number of faces shared with processor 7 = 922
+    Number of processor patches = 7
+    Number of processor faces = 9670
+    Number of boundary faces = 1743
+
+Processor 3
+    Number of cells = 122300
+    Number of points = 159138
+    Number of faces shared with processor 0 = 1340
+    Number of faces shared with processor 1 = 457
+    Number of faces shared with processor 2 = 3682
+    Number of faces shared with processor 4 = 771
+    Number of faces shared with processor 5 = 352
+    Number of faces shared with processor 6 = 1567
+    Number of faces shared with processor 7 = 156
+    Number of processor patches = 7
+    Number of processor faces = 8325
+    Number of boundary faces = 1271
+
+Processor 4
+    Number of cells = 121060
+    Number of points = 291953
+    Number of faces shared with processor 0 = 4287
+    Number of faces shared with processor 1 = 781
+    Number of faces shared with processor 2 = 1361
+    Number of faces shared with processor 3 = 771
+    Number of faces shared with processor 5 = 4111
+    Number of faces shared with processor 6 = 1698
+    Number of faces shared with processor 7 = 1089
+    Number of processor patches = 7
+    Number of processor faces = 14098
+    Number of boundary faces = 7516
+
+Processor 5
+    Number of cells = 121164
+    Number of points = 289548
+    Number of faces shared with processor 1 = 3383
+    Number of faces shared with processor 2 = 556
+    Number of faces shared with processor 3 = 352
+    Number of faces shared with processor 4 = 4111
+    Number of faces shared with processor 6 = 247
+    Number of faces shared with processor 7 = 3709
+    Number of processor patches = 6
+    Number of processor faces = 12358
+    Number of boundary faces = 7542
+
+Processor 6
+    Number of cells = 120012
+    Number of points = 292107
+    Number of faces shared with processor 2 = 166
+    Number of faces shared with processor 3 = 1567
+    Number of faces shared with processor 4 = 1698
+    Number of faces shared with processor 5 = 247
+    Number of faces shared with processor 7 = 4582
+    Number of processor patches = 5
+    Number of processor faces = 8260
+    Number of boundary faces = 7728
+
+Processor 7
+    Number of cells = 120032
+    Number of points = 261456
+    Number of faces shared with processor 2 = 922
+    Number of faces shared with processor 3 = 156
+    Number of faces shared with processor 4 = 1089
+    Number of faces shared with processor 5 = 3709
+    Number of faces shared with processor 6 = 4582
+    Number of processor patches = 5
+    Number of processor faces = 10458
+    Number of boundary faces = 7328
+
+Number of processor faces = 41703
+Max number of cells = 122436 (0.999385% above average 121224)
+Max number of processor patches = 7 (21.7391% above average 5.75)
+Max number of faces between processors = 14098 (35.2229% above average 10425.8)
+
+Time = 0
+
+Processor 0: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 1: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 2: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 3: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 4: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 5: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 6: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+Processor 7: field transfer
+Detected additional non-decomposed files in "/home/kevin/Code/SYTang/DataBase/data/OpenFOAM/0/uniform"
+
+End
+
