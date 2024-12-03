@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|                                                                             |
+|    HiSA: High Speed Aerodynamic solver                                      |
+|    Copyright (C) 2014-2017 Johan Heyns - CSIR, South Africa                 |
+|    Copyright (C) 2014-2017 Oliver Oxtoby - CSIR, South Africa               |
+|                                                                             |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "(k|omega|nuTilda|rPseudoDeltaT)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0.05;
+        minIter         1;
+    }
+
+    "(k|omega|nuTilda|rPseudoDeltaT)Final"
+    {
+        $nuTilda;
+        tolerance       1e-8;
+        reltol          0.05;
+        minIter         1;
+    }
+
+    yPsi
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+        tolerance       1e-4;
+        relTol          0;
+    }
+}
+
+relaxationFactors
+{
+    equations
+    {
+        nuTilda    0.5;
+        k          0.5;
+        omega      0.5;
+    }
+}
+
+flowSolver
+{
+    solver            GMRES;
+    GMRES
+    {
+        inviscidJacobian LaxFriedrichs;
+        viscousJacobian  laplacian;
+        preconditioner   LUSGS;
+
+        maxIter          50;
+        nKrylov          8;
+        solverTolRel     1e-6 (1e-6 1e-6 1e-6) 1e-6;
+    }
+}
+
+pseudoTime
+{
+    pseudoTol          1e-6 (1e-6 1e-6 1e-6) 1e-6;
+    pseudoCoNum        0.1;
+    pseudoCoNumMax     25;
+    localTimestepping  true;
+}
+
+// ************************************************************************* //
