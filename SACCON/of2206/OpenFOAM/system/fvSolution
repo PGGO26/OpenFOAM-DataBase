@@ -21,17 +21,17 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0.05;
-        minIter         2;
+        minIter         1;
     }
 
     "(k|omega|nuTilda|rPseudoDeltaT)Final"
     {
         $nuTilda;
-        tolerance       1e-6;
+        tolerance       1e-8;
         reltol          0.05;
-        minIter         2;
+        minIter         1;
     }
 
     yPsi
@@ -53,7 +53,7 @@ relaxationFactors
     {
         nuTilda    0.5;
         k          0.5;
-        omega      0.5;
+        omega      0.3;
     }
 }
 
