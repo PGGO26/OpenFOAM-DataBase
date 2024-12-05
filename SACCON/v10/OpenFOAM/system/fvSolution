@@ -51,9 +51,9 @@ relaxationFactors
 {
     equations
     {
-        nuTilda    0.5;
-        k          0.5;
-        omega      0.5;
+        nuTilda    0.7;
+        k          0.7;
+        omega      0.7;
     }
 }
 
@@ -74,7 +74,7 @@ flowSolver
 
 pseudoTime
 {
-    pseudoTol          1e-6 (1e-6 1e-6 1e-6) 1e-6;
+    pseudoTol          1e-8 (1e-8 1e-8 1e-8) 1e-8;
     pseudoCoNum        0.1;
     pseudoCoNumMax     25;
     localTimestepping  true;

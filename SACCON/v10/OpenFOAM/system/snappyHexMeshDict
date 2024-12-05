@@ -111,7 +111,7 @@ castellatedMeshControls
         SACCON
         {
             // Surface-wise min and max refinement level
-            level (4 8);
+            level (4 10);
 
             // Optional specification of patch type (default is wall). No
             // constraint types (cyclic, symmetry) etc. are allowed.
@@ -145,7 +145,7 @@ castellatedMeshControls
         refinementBox
         {
             mode    inside;
-            level   5;
+            level   4;
         }
     }
 
