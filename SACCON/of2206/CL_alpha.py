@@ -26,9 +26,7 @@ plt.scatter(val_aoa, val_cl, edgecolor='red', facecolor='none', s=50, linewidths
 plt.plot(aoa_lst, cl_lst, color='blue', label='CFD', marker='v', markeredgecolor='blue', markerfacecolor='blue', markersize=8)
 
 plt.legend()
+plt.ylabel(r"$C_L$")
+plt.xlabel(r"$\alpha$ (degree)")
 plt.grid()
 plt.savefig("CL vs alpha.png")
-
-AOA_LST = range(0, 11, 2)
-for aoa in AOA_LST:
-    print(aoa)
