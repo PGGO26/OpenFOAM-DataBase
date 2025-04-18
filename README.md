@@ -18,3 +18,19 @@ reconstructParMesh -constant
 
 ### 生成數據
 在建立好網格後，調整 `Allrun.py` 文件中需要生成資料的數量及範圍後就可以執行開始生成數據了
+
+# SACCON case
+目前包含使用兩個 OpenFOAM 版本 (v2206, version10) 的 SACCON case
+1. 使用 HiSA 求解器
+2. 使用 snappyHexMesh 方法建立網格
+## OpenFOAM version10 case
+> 需要注意在模擬開始前 `0/` 資料夾中不能有 `wallShearStress` 的檔案存在
+- `mesh_test` 測試網格的模擬結果
+- `dataGen` 建立資料庫
+### `mesh_test`
+調整 `system/` 資料夾中的 `blockMeshDict` 或是 `snappyHexMeshDict` 文件來生成不同的網格
+- 先進入 OpenFOAM 資料夾中執行 `meshing.py` 代碼，建立網格
+- 再使用 `test_mesh.py` 代碼進行模擬，根據需求調整內部的後處理函數參數 (`boundaryProbes`, `outputProcessing`)
+### `dataGen`
+1. 同樣先使用 `meshing.py` 建立網格
+2. 再使用 `dataGen.py` 建立資料庫
