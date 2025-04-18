@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|                                                                             |
+|    HiSA: High Speed Aerodynamic solver                                      |
+|    Copyright (C) 2014-2017 Johan Heyns - CSIR, South Africa                 |
+|    Copyright (C) 2014-2017 Oliver Oxtoby - CSIR, South Africa               |
+|                                                                             |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           volScalarField;
+    object          T;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "include/freestreamConditions"
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform $T;
+
+boundaryField
+{
+    inlet
+    {
+        type            characteristicFarfieldTemperature;
+        #include        "include/freestreamConditions"
+        value           $internalField;
+
+    }
+    
+    outlet
+    {
+        type            characteristicFarfieldTemperature;
+        #include        "include/freestreamConditions"
+        value           $internalField;
+
+    }
+    
+    frontAndBack
+    {
+        type            characteristicFarfieldTemperature;
+        #include        "include/freestreamConditions"
+        value           $internalField;
+
+    }
+    
+    lowerWall
+    {
+        type            characteristicFarfieldTemperature;
+        #include        "include/freestreamConditions"
+        value           $internalField;
+    }
+    
+    upperWall
+    {
+        type            characteristicFarfieldTemperature;
+        #include        "include/freestreamConditions"
+        value           $internalField;
+    }
+
+    SACCON
+    {
+        type            characteristicWallTemperature;
+        value           $internalField;
+    }
+}
+
+
+// ************************************************************************* //
